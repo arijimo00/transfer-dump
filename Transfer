@@ -1,23 +1,27 @@
+Option Explicit
+
 Sub Step1()
-'
-' Step1 Macro
-'
-' Keyboard Shortcut: Ctrl+Shift+A
-'
+    Dim n As Long
+    Dim f As Long
+    
     n = 0
-    f = "=Locations!D1"
-    Range("A1:C1").Select
-    Function Repeat_Process(n, f)
-        If n < f Then
-            Range("A" & (1 + (n * 16)) & ":L" & (16 + (n * 16))).Select
-            Selection.Copy
-            Range("A" & (17 + (n * 16))).Select
-            ActiveSheet.Paste
-            Range("A" & (17 + (n * 16)) & ":C" & (17 + (n * 16))).Select
-            Application.CutCopyMode = False
-            ActiveCell.FormulaR1C1 = "=Locations!A" & (2 + (n * 16))
-            n = n + 1
-        Else
-   End Function
-   
+    f = CLng(Worksheets("Locations").Range("D1").Value) ' how many repeats
+
+    Repeat_Process n, f
+End Sub
+
+Private Sub Repeat_Process(ByVal n As Long, ByVal f As Long)
+    If n >= f Then Exit Sub   ' base case (stop recursion)
+
+    ' Copy A:L block (16 rows) and paste it 16 rows below
+    With ActiveSheet
+        .Range("A" & (1 + n * 16) & ":L" & (16 + n * 16)).Copy _
+            Destination:=.Range("A" & (17 + n * 16))
+
+        ' Update the label/formula in column A of the newly pasted block's first row
+        .Range("A" & (17 + n * 16)).Formula = "=Locations!A" & (2 + n * 16)
+    End With
+
+    ' Recurse
+    Repeat_Process n + 1, f
 End Sub
