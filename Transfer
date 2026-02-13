@@ -1,0 +1,23 @@
+Sub Step1()
+'
+' Step1 Macro
+'
+' Keyboard Shortcut: Ctrl+Shift+A
+'
+    n = 0
+    f = "=Locations!D1"
+    Range("A1:C1").Select
+    Function Repeat_Process(n, f)
+        If n < f Then
+            Range("A" & (1 + (n * 16)) & ":L" & (16 + (n * 16))).Select
+            Selection.Copy
+            Range("A" & (17 + (n * 16))).Select
+            ActiveSheet.Paste
+            Range("A" & (17 + (n * 16)) & ":C" & (17 + (n * 16))).Select
+            Application.CutCopyMode = False
+            ActiveCell.FormulaR1C1 = "=Locations!A" & (2 + (n * 16))
+            n = n + 1
+        Else
+   End Function
+   
+End Sub
